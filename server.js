@@ -9,6 +9,7 @@ import entrepreneurRoutes from "./routes/entrepreneurRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import districtRoutes from "./routes/districtRoutes.js";
 
+// 🔐 Load environment variables
 dotenv.config();
 
 // 🔗 Connect MongoDB
@@ -20,12 +21,12 @@ const app = express();
    🌍 CORS Middleware
 ========================================================== */
 const allowedOrigins = [
-  "http://localhost:5173",           // Local dev
+  "http://localhost:5173",
   "https://btl-bhj.pages.dev",
   "https://5fddbd90.btl-bhj.pages.dev",
   "https://solarenterprenuer.pages.dev",
-  "https://brihaspathitech.com",     // Frontend live
-  "https://api.brihaspathitech.com"  // 🔥 Backend API subdomain (required for Contabo)
+  "https://brihaspathitech.com",
+  "https://api.brihaspathitech.com" // For SSL after deployment
 ];
 
 app.use(
@@ -44,7 +45,7 @@ app.use(
   })
 );
 
-app.use(express.json({ limit: "10mb" }));
+app.use(express.json({ limit: "10mb" })); // Handles base64 images
 
 /* ==========================================================
    🧭 Route Mounting
@@ -70,13 +71,9 @@ app.use((err, req, res, next) => {
 });
 
 /* ==========================================================
-   🚀 Server Start (IMPORTANT CHANGE)
+   🚀 Server Start
 ========================================================== */
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080; // Use 8080 in .env if required
 app.listen(PORT, "0.0.0.0", () => {
-  console.log("🌍 API running:");
-  console.log(`   ▶ Local:  http://localhost:${PORT}`);
-  console.log(`   ▶ Public: https://173.249.6.61:${PORT}`);
-  console.log(`   ▶ Secure: https://api.brihaspathitech.com   (after SSL setup)`);
-  console.log("🔓 Allowed CORS origins:", allowedOrigins);
+  console.log(`🚀 Server running successfully on port ${PORT}`);
 });
