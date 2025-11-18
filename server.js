@@ -7,7 +7,7 @@ import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import entrepreneurRoutes from "./routes/entrepreneurRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
-import districtRoutes from "./routes/districtRoutes.js"; // ✅ new import
+import districtRoutes from "./routes/districtRoutes.js";
 
 dotenv.config();
 
@@ -19,24 +19,19 @@ const app = express();
 /* ==========================================================
    🌍 CORS Middleware
 ========================================================== */
-
-// You can add more origins later if needed
 const allowedOrigins = [
-  "http://localhost:5173",      // local Vite dev
-  "https://btl-bhj.pages.dev", 
-  'https://5fddbd90.btl-bhj.pages.dev',
-  "https://solarenterprenuer.pages.dev",// deployed frontend
-  'https://brihaspathitech.com'
-
+  "http://localhost:5173",           // Local dev
+  "https://btl-bhj.pages.dev",
+  "https://5fddbd90.btl-bhj.pages.dev",
+  "https://solarenterprenuer.pages.dev",
+  "https://brihaspathitech.com",     // Frontend live
+  "https://api.brihaspathitech.com"  // 🔥 Backend API subdomain (required for Contabo)
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      
-      // Allow requests with no origin (like Postman, curl)
-      if (!origin) return callback(null, true);
-
+      if (!origin) return callback(null, true); // allow Postman/cURL
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -49,7 +44,7 @@ app.use(
   })
 );
 
-app.use(express.json({ limit: "10mb" })); // handle large base64 payloads
+app.use(express.json({ limit: "10mb" }));
 
 /* ==========================================================
    🧭 Route Mounting
@@ -57,31 +52,31 @@ app.use(express.json({ limit: "10mb" })); // handle large base64 payloads
 app.use("/api/auth", authRoutes);
 app.use("/api/entrepreneur", entrepreneurRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/district-coordinator", districtRoutes); // ✅ mounted route
-
+app.use("/api/district-coordinator", districtRoutes);
 
 /* ==========================================================
-   🩵 Root Endpoint
+   🩵 Health Check
 ========================================================== */
 app.get("/", (req, res) =>
-  res.send("☀️ Brihaspathi Solar Onboarding + Admin Auth API Running...")
+  res.send("☀️ Brihaspathi Solar Onboarding API is running...")
 );
 
 /* ==========================================================
-   ⚙️ Error Handling (Safety Net)
+   ⚙️ Global Error Handler
 ========================================================== */
 app.use((err, req, res, next) => {
   console.error("❌ Uncaught Error:", err);
-  res
-    .status(500)
-    .json({ message: err.message || "Server Error" });
+  res.status(500).json({ message: err.message || "Server Error" });
 });
 
 /* ==========================================================
-   🚀 Server Start
+   🚀 Server Start (IMPORTANT CHANGE)
 ========================================================== */
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
-  console.log("✅ Allowed CORS origins:", allowedOrigins);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log("🌍 API running:");
+  console.log(` ▶ Local:  http://localhost:${PORT}`);
+  console.log(`   ▶ Public: http://173.249.6.61:${PORT}`);
+  console.log(`   ▶ Secure: https://api.brihaspathitech.com `);
+  console.log("🔓 Allowed CORS origins:", allowedOrigins);
 });
