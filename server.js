@@ -76,7 +76,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, "0.0.0.0", () => {
   console.log("🌍 API running:");
   console.log(`   ▶ Local:  http://localhost:${PORT}`);
-  console.log(`   ▶ Public: http://173.249.6.61:${PORT}`);
+  console.log(`   ▶ Public: https://173.249.6.61:${PORT}`);
   console.log(`   ▶ Secure: https://api.brihaspathitech.com   (after SSL setup)`);
   console.log("🔓 Allowed CORS origins:", allowedOrigins);
 });
