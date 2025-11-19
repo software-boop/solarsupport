@@ -91,13 +91,11 @@ export const registerAdmin = async (req, res) => {
       return res.status(400).json({ message: "Admin already exists" });
     }
 
-    // ✅ Hash password once
-    const hashedPassword = await bcrypt.hash(password, 10);
-
+    // ⚠ DON'T hash manually here
     const admin = await Admin.create({
       name,
       email: email.trim().toLowerCase(),
-      password: hashedPassword,
+      password, // 🔥 Leave as plain text → pre("save") will hash it
       role: "admin",
     });
 
@@ -115,3 +113,4 @@ export const registerAdmin = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
